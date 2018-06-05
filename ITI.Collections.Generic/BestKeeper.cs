@@ -39,10 +39,11 @@ namespace ITI.Collections.Generic
             if( IsFull )
             {
                 if( _comparer.Compare( candidate, _items[ 0 ] ) < 0 ) return false;
-                RemoveMin();
+                AddFromTop( candidate );
+                return true;
             }
 
-            DoAdd( candidate );
+            AddFromBottom( candidate );
             return true;
         }
 
@@ -54,7 +55,7 @@ namespace ITI.Collections.Generic
 
         bool IsFull => _count == _items.Length;
 
-        void DoAdd( T item )
+        void AddFromBottom( T item )
         {
             _items[ _count ] = item;
             int idx = _count;
@@ -70,12 +71,10 @@ namespace ITI.Collections.Generic
             _count++;
         }
 
-        void RemoveMin()
+        void AddFromTop( T candidate )
         {
-            Swap( 0, _count - 1 );
-            _count--;
             int idx = 0;
-            T item = _items[ 0 ];
+            _items[ 0 ] = candidate;
 
             while( true )
             {
@@ -83,7 +82,7 @@ namespace ITI.Collections.Generic
                 int rightIdx = idx * 2 + 2;
 
                 int smallestIdx;
-                if( leftIdx < _count && _comparer.Compare( _items[ leftIdx ], item ) < 0 ) smallestIdx = leftIdx;
+                if( leftIdx < _count && _comparer.Compare( _items[ leftIdx ], candidate ) < 0 ) smallestIdx = leftIdx;
                 else smallestIdx = idx;
                 if( rightIdx < _count && _comparer.Compare( _items[ rightIdx ], _items[ smallestIdx ] ) < 0 ) smallestIdx = rightIdx;
 
